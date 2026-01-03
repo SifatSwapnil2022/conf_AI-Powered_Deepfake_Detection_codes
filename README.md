@@ -1,44 +1,123 @@
-﻿# AI-Powered Deepfake Detection Codes
- 
-The term "deepfake" might sound new, having only gained popularity in 2017 when a Reddit user first used it. But the concept of image manipulation is much older — even in the early 1900s, people used crude techniques like pasting someone’s face onto another’s passport photo for forgery or coercion.
-So, what exactly is a deepfake?
-->> From my perspective:
-A deepfake refers to a type of synthetic media where a person’s likeness in an image or video is replaced with another person’s, using AI-driven techniques.
-To address this growing challenge, we developed VFDNET (Vision Fake Detection Network) — a deep learning model specifically designed to detect fake or GAN-generated content in images. It has shown promising performance in identifying visual forgeries.
-->> How VFDNET Works
-hashtag#Input_Image
-Accepts a fixed-size RGB image of 224×224×3 pixels.
-Unlike CNNs, our transformer-based model does not process the image pixel by pixel.
-hashtag#Patch_Embedding
-The image is divided into 16×16 patches, resulting in 196 patches in total.
-Each patch is flattened into a 1D vector of size 768.
-A linear projection maps each vector into a learnable patch embedding.
-hashtag#Positional_Embedding
-Since transformers are position-agnostic, we add positional encodings to preserve spatial context.
-Final input = patch embedding + position embedding
-[CLS] Token Addition
-A special [CLS] token is prepended to the input sequence.
-After training, this token encodes the global representation of the image.
-Input format:
- [CLS], Patch_1, Patch_2, ..., Patch_196
-hashtag#Transformer_Encoder
-Composed of multiple blocks, each including:
-Layer Normalization → Keeps the values in a stable range for better and faster training.
+# 🧠 VFDNET: AI-Powered Deepfake Detection
+
+This repository contains the official implementation of VFDNET (Vision Fake Detection Network), a transformer-based deep learning framework designed for robust detection of AI-generated and manipulated facial images.
+
+---
+# 📌 Background & Motivation
+
+Although the term deepfake became popular in 2017, the manipulation of visual media dates back more than a century. Modern deepfakes, however, leverage GANs and transformer-based models, making them significantly harder to detect and posing serious threats to digital trust, privacy, and misinformation control.
+
+VFDNET was developed to address this challenge by leveraging Vision Transformer (ViT) architecture for effective fake image detection.
+---
+# 🔍 What Is a Deepfake?
+
+From our perspective:
+
+A deepfake refers to a type of synthetic media where a person’s likeness in an image or video is replaced or manipulated using AI-driven techniques, often making the result indistinguishable from real content.
+---
+# 🚀 Overview of VFDNET
+
+VFDNET is a pure transformer-based deepfake detection model that learns global image representations instead of relying solely on local convolutional features.
+
+Key highlights:
+
+Vision Transformer (ViT) backbone
+
+Patch-based image representation
+
+Global context modeling via self-attention
+
+Binary classification: Real vs Fake
+---
+# 🏗️ Architecture & Workflow
+
+1️⃣ Input Image
+
+RGB image of size 224 × 224 × 3
+
+Input images are resized and normalized before processing
+
+2️⃣ Patch Embedding
+
+Image is divided into 16 × 16 patches
+
+Total patches: 196
+
+Each patch is:
+
+Flattened into a 768-dimensional vector
+
+Projected into a learnable embedding space
+
+3️⃣ Positional Embedding
+
+Transformers are position-agnostic
+
+Learnable positional encodings are added to patch embeddings to preserve spatial structure
+
+Final input representation:
+
+Patch Embedding + Positional Embedding
+
+4️⃣ [CLS] Token
+
+A special [CLS] token is prepended to the patch sequence
+
+This token learns a global representation of the entire image
+
+Input sequence format:
+
+[CLS], Patch₁, Patch₂, ..., Patch₁₉₆
+
+5️⃣ Transformer Encoder
+
+The encoder consists of multiple stacked blocks, each containing:
+
+Layer Normalization
+Stabilizes training and accelerates convergence
+
 Multi-Head Self-Attention (MHSA)
- → Allows patches to attend to each other
- → Helps the model determine which parts of the image are important for each patch
-Feedforward Neural Networks (MLP)
- → Applies simple mathematical layers to each patch independently
- → Helps the model learn better feature representations
+Enables each patch to attend to all others
+Captures global dependencies and semantic inconsistencies
+
+Feed-Forward Network (MLP)
+Applies non-linear transformations to each patch independently
+
 Residual Connections
- → Preserve the original input and add it back after processing
- → Help stabilize training and improve gradient flow
-hashtag#Feature_Extraction
-After passing through the encoder, we extract the output from the [CLS] token, which now represents the entire image.
-hashtag#Classification_Head
-The [CLS] vector is passed through a fully connected MLP followed by a softmax layer to classify the image as either Real or Fake.
+Improve gradient flow and training stability
 
-<img width="4171" height="1820" alt="ViT-DFD" src="https://github.com/user-attachments/assets/47e70f35-8dec-4f83-904c-6bd437c63f27" />
+6️⃣ Feature Extraction
+
+After encoder processing, the output corresponding to the [CLS] token is extracted
+
+This vector represents the entire image
+
+7️⃣ Classification Head
+
+The [CLS] feature is passed through:
+
+Fully connected MLP
+
+Softmax layer
+
+Final output: Real / Fake classification
+---
+# 🖼️ Model Architecture
 
 
-In a world increasingly influenced by AI-generated content, tools like VFDNET play a crucial role in preserving authenticity and fighting misinformation. 
+<p align="center"> <img src="https://github.com/user-attachments/assets/47e70f35-8dec-4f83-904c-6bd437c63f27" alt="VFDNET Architecture" width="90%"> </p>
+
+# 🌍 Impact
+
+In an era increasingly dominated by AI-generated media, VFDNET contributes toward:
+
+Combating misinformation
+
+Enhancing media authenticity
+
+Strengthening trust in digital content
+---
+# 📜 License
+
+This project is released for research and academic use.
+---
